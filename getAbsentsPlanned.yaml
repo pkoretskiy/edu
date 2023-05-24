@@ -1,0 +1,97 @@
+openapi: 3.0.0
+info:
+  title: getAbsentsPlanned для samson.team
+  version: 0.1.0
+servers:
+  - url: https://etalon.samson.team/
+    description: Эталон
+
+paths:
+  /oauth/api.php?client_id=tools&method=getAbsentsPlanned:
+    post:
+      summary:  Метод возвращает cпланированные отсутствия
+      description: Метод предназначен для передачи отсутствий в kpi.intsite.org
+      tags:
+        - Tools
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/Request"
+            example:
+              time: 1684823137
+              dataCheck: "2021-11-18"
+              sig: f347b039eb0a7114ff9d65c222185ee1       
+      responses:
+        '200':
+          "description": Подтверждение получения запроса
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Response"
+
+components:
+  schemas:
+    Request:
+      type: object
+      required:
+        - time
+        - param
+        - sig
+      properties:
+        time:
+          description: Уникальное время
+          type: string
+          example: 1684823137
+        param:
+          $ref: '#/components/schemas/Param'
+        sig:
+          description: Подпись запроса
+          type: string
+          example: f347b039eb0a7114ff9d65c222185ee1         
+    Param:
+      type: object
+      required:
+        - dataCheck
+      properties:
+        dataCheck:
+          description: Время проверки
+          type: string
+          format: date
+          example: "2021-11-18"
+    Absence:
+      type: object
+      required:
+        - login
+        - active_from
+        - active_to
+        - name
+        - id
+      properties:
+        login:
+          description: Уникальный логин сотрудника
+          type: string
+          example: "yukoroleva"
+        active_from:
+          description: Дата начала отсутствия
+          type: string
+          format: date
+          example: "01.04.2020 00:00:00"
+        active_to:
+          description: Дата окончания отсутствия
+          type: string
+          format: date
+          example: "17.06.2023 00:00:00"
+        name:
+          description: Наименование отсутствия
+          type: string
+          example: "Отпуск декретный"   
+        id:
+          description: Уникальный индификатор отсутствия
+          type: string
+          example: 2442778
+    Response:
+      type: array
+      items: 
+       $ref: "#/components/schemas/Absence"
