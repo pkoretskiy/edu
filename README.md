@@ -1,2 +1,2 @@
 # edu
-Learn who create github repository
+Learn how create github repository
